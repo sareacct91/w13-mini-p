@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/connection');
 
@@ -18,17 +19,39 @@ Traveller.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         isEmail: true
       },
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [8],
+      },
+    }
   },
   {
+    hooks: {
+      async beforeBulkCreate(travellers) {
+        for (const t of travellers) {
+          t.dataValues.password = await bcrypt.hash(t.dataValues.password, 10);
+        }
+
+        return travellers
+      },
+      async beforeCreate(traveller) {
+         return await bcrypt.hash(traveller.password, 10);
+      },
+    },
     sequelize,
     timestamps: false,
     freezeTableName: true,
     modelName: 'traveller'
   }
 );
+
+
 
 module.exports = Traveller;
