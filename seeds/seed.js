@@ -11,6 +11,12 @@ const seedDatabase = async () => {
 
   const locations = await Location.bulkCreate(locationSeedData);
 
+/*
+  const p1 =  Traveller.bulkCreate(travellerSeedData);
+  const p2 =  Location.bulkCreate(locationSeedData);
+  const { travellers, locations } = await Promise.all([p1, p2]);
+*/
+
   // Create trips at random
   for (let i = 0; i < 10; i++) {
     // Get a random traveller's `id`
