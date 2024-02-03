@@ -1,4 +1,5 @@
-const { Location, Traveller, Trip } = require('../models');
+const { Traveller } = require('../models');
+const { BadRequestError, NotFoundError } = require('../errors');
 
 async function getTravellers(req, res) {
   const result = await Traveller.findAll();
@@ -11,7 +12,7 @@ async function createTraveller(req, res) {
   console.log(name, email)
 
   if (!(name && email)) {
-    throw new Error('bad request');
+    throw new BadRequestError('Missing request data');
   }
 
   const result = await Traveller.create({ name, email });
@@ -25,12 +26,13 @@ async function createTraveller(req, res) {
 async function getTraveller(req, res) {
   const { id: traveller_id } = req.params;
 
-  const result = await Traveller.findOne({
-    where: {
-      id: traveller_id
-    },
-    include: ['planned_trips'],
+  const result = await Traveller.findByPk(traveller_id, {
+    include: 'planned_trips'
   });
+
+  if (!result) {
+    throw new NotFoundError('No Traveller with that id found.');
+  }
 
   res.status(200).json({
     msg: 'Success',
@@ -39,7 +41,22 @@ async function getTraveller(req, res) {
 }
 
 async function deleteTravellers(req, res) {
-  res.send('deleteTravellers')
+  const { id: traveller_id } = req.params;
+
+  const result = await Traveller.destroy({
+    where: {
+      id: traveller_id
+    }
+  })
+
+  if (!result) {
+    throw new NotFoundError('No Traveller with that id found.');
+  }
+
+  res.status(200).json({
+    msg: 'Success',
+    data: result
+  });
 }
 
 module.exports = {
