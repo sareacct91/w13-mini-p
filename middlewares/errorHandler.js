@@ -1,15 +1,15 @@
 module.exports = function (err, req, res, next) {
+  console.log(err.name, '\n');
   console.log(err);
 
-  const response = {
-    status: 500,
-    message: 'Try again later'
+  const errResponse = {
+    status: err.statusCode || 500,
+    message: err.message || 'Something went wrong. Try again later'
   };
 
-  if (err.message === 'bad request' || err.statusCode === 400) {
-    response.status = 400;
-    response.message = 'Missing data';
+  if (err.name === 'SequelizeValidationError') {
+    errResponse.message = 'Something went wrong. Try again later'
   }
 
-  res.status(response.status).json({msg: response.message});
+  res.status(errResponse.status).json({msg: errResponse.message});
 };
