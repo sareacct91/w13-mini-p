@@ -1,10 +1,11 @@
 const express = require('express');
-const sequelize = require('./config/connection');
 require('express-async-errors');
 const morgan = require('morgan');
 
+const sequelize = require('./config/connection');
 const mainRoute = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
+const loginValidate = require('./middlewares/auth');
 
 const app = express();
 const PORT = process.env.PORT;
@@ -13,6 +14,8 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+app.use(loginValidate);
 
 app.use(mainRoute);
 app.use(errorHandler);
