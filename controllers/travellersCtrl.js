@@ -7,11 +7,9 @@ async function getTravellers(req, res) {
 }
 
 async function createTraveller(req, res) {
-  const { name, email } = req.body;
+  const { name, email, password } = req.body;
 
-  console.log(name, email)
-
-  if (!(name && email)) {
+  if (!(name && email && password)) {
     throw new BadRequestError('Missing request data');
   }
 
