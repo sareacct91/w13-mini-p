@@ -9,13 +9,13 @@ const errorHandler = require('./middlewares/errorHandler');
 const app = express();
 const PORT = process.env.PORT;
 
-
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
 app.use(mainRoute);
 app.use(errorHandler);
-
 
 (async function () {
   try {
