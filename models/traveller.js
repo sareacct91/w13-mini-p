@@ -42,7 +42,8 @@ Traveller.init(
         return travellers
       },
       async beforeCreate(traveller) {
-         return await bcrypt.hash(traveller.password, 10);
+        traveller.password = await bcrypt.hash(traveller.password, 10);
+        return traveller;
       },
     },
     sequelize,
