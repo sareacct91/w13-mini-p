@@ -13,7 +13,7 @@ async function createTraveller(req, res) {
     throw new BadRequestError('Missing request data');
   }
 
-  const result = await Traveller.create({ name, email });
+  const result = await Traveller.create({ name, email, password });
 
   res.status(201).json({
     msg: 'Success',
