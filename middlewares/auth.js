@@ -6,6 +6,10 @@ const { UnauthorizedError } = require("../errors");
 
 async function loginValidate(req,res,next) {
 
+  if (!req.authentication) {
+    throw new UnauthorizedError('Bad credential');
+  }
+
   const { name, pass } = auth(req);
   console.log(name, '\n', pass);
 
